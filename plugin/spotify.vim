@@ -88,14 +88,14 @@ track_details = s.track(internal_uri)
 print(track_details)
 #y = json.loads(str(track_details))
 y = json.dumps(track_details)
-z = json.loads(y)
+track_json = json.loads(y)
 #vim.current.buffer.append(str(track_details), 0)
-#vim.current.buffer.append(str(z), 2)
+#vim.current.buffer.append(str(track_json), 2)
 #vim.current.buffer.append(y, 4)
-print(z['album'])
+print(track_json['album'])
 
 
-s.start_playback(device_id=os.getenv('SPOTIFY_DEVICE_ID'), context_uri=z['album']['uri'], offset=z['track_number']-1)
+s.start_playback(device_id=os.getenv('SPOTIFY_DEVICE_ID'), context_uri=track_json['album']['uri'], offset=track_json['track_number']-1)
 EOL
 endfunction
 
