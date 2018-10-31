@@ -243,7 +243,7 @@ s = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 results = s.artist_albums(vim.eval("a:artist_uri"), album_type='album')
 results['previous'] = 'None'
 results['next'] = 'None'
-vim.vars['tracks'] = vim.Dictionary(results)
+vim.vars['tracks'] = dict(results) #vim.Dictionary(results)
 EOL
         let s:cache.artist[a:artist_uri] = g:tracks
     endif
@@ -296,7 +296,7 @@ s = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 results = s.album(vim.eval("a:album_uri"))
 results['tracks']['next'] = 'None'
 results['tracks']['previous'] = 'None'
-vim.vars['tracks'] = vim.Dictionary(results)
+vim.vars['tracks'] = dict(results) #vim.Dictionary(results)
 EOL
         let s:cache.album[a:album_uri] = g:tracks
     endif
