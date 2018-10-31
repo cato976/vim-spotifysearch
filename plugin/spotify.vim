@@ -78,7 +78,7 @@ token = util.prompt_for_user_token(
         scope='user-modify-playback-state',
         redirect_uri='http://google.com')
 
-print(token)
+#print(token)
 s = spotipy.Spotify(auth=token)
 print(vim.eval('a:uri'))
 print(vim.eval('s:the_uri'))
@@ -155,6 +155,7 @@ function! SpotifyTrackSearch(track)
         call s:OpenWindow()
         return
     endif
+    call s:OpenWindow()
     if ! has_key(s:cache.track_search, a:track)
         python << EOL
 import spotipy
@@ -168,7 +169,8 @@ s = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 results = s.search(vim.eval("a:track"), type="track")
 results['tracks']['next'] = 'None'
 results['tracks']['previous'] = 'None'
-vim.vars['tracks'] = vim.Dictionary(results)
+
+vim.vars['tracks'] = dict(results) #vim.Dictionary(results)
 EOL
     let s:cache.track_search[a:track] = g:tracks
     endif
