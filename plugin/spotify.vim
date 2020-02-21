@@ -62,9 +62,9 @@ function! WindowsUriOpener(uri, ...)
     catch
     endtry
 python << EOL
+import vim
 import spotipy
 import os
-import vim
 import json
 import spotipy.util as util
 
@@ -158,8 +158,9 @@ function! SpotifyTrackSearch(track)
     call s:OpenWindow()
     if ! has_key(s:cache.track_search, a:track)
         python << EOL
-import spotipy
 import vim
+import spotipy
+import spotipy.util as util
 
 from spotipy.oauth2 import SpotifyClientCredentials
 
