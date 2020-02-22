@@ -61,7 +61,7 @@ function! WindowsUriOpener(uri, ...)
         call s:SystemCallWrapper("explorer " . a:uri)
     catch
     endtry
-python << EOL
+python3 << EOL
 import vim
 import spotipy
 import os
@@ -157,7 +157,7 @@ function! SpotifyTrackSearch(track)
     endif
     call s:OpenWindow()
     if ! has_key(s:cache.track_search, a:track)
-        python << EOL
+        python3 << EOL
 import vim
 import spotipy
 import spotipy.util as util
@@ -233,7 +233,7 @@ endfunction
 
 function! ArtistLookup(artist_uri)
     if ! has_key(s:cache.artist, a:artist_uri)
-        python << EOL
+        python3 << EOL
 import spotipy
 import vim
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -287,7 +287,7 @@ endfunction
 function! s:AlbumLookup(album_uri)
     let l:album = {}
     if ! has_key(s:cache.album, a:album_uri)
-        python << EOL
+        python3 << EOL
 import spotipy
 import vim
 from spotipy.oauth2 import SpotifyClientCredentials
