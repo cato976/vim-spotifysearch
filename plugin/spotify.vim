@@ -57,7 +57,7 @@ endfunction
 
 function! WindowsUriOpener(uri, ...)
     try
-	    let s:the_uri = a:uri
+        let s:the_uri = a:uri
         call s:SystemCallWrapper("explorer " . a:uri)
     catch
     endtry
@@ -126,7 +126,7 @@ function! s:BufferTrackSearchMappings()
     nnoremap <silent> <buffer> <2-LeftMouse> :call FollowMapping()<CR>
     nnoremap <silent> <buffer> q <C-W>q
     call s:OpenWindow()
-	
+
     if exists("g:spotify_prev_key")
         exec 'nnoremap <silent> <buffer> ' . g:spotify_prev_key . ' :call system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Prev")<CR>'
     endif
@@ -225,10 +225,10 @@ function! s:PrintTracks(tracks)
 endfunction
 
 function! s:AvailableInTerritory(territories)
-   let country_code = s:GetCountryCode()
-   return country_code == "ANY" ||
-               \  len(a:territories) == 0 ||
-               \  index(a:territories, country_code) >= 0
+    let country_code = s:GetCountryCode()
+    return country_code == "ANY" ||
+                \  len(a:territories) == 0 ||
+                \  index(a:territories, country_code) >= 0
 endfunction
 
 function! ArtistLookup(artist_uri)
