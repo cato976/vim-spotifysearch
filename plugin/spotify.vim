@@ -5,6 +5,19 @@ if &cp || version < 700
     finish
 end
 
+let s:plugin_root_dir = fnamemodify(resolve(expand('<sfile>:p')), ':h')
+
+python3 << EOF
+import sys
+from os.path import normpath, join
+import vim
+plugin_root_dir = vim.eval('s:plugin_root_dir')
+python_root_dir = normpath(join(plugin_root_dir, '..', 'python'))
+sys.path.insert(0, python_root_dir)
+import sample
+import my_spotify
+EOF
+
 function! s:GetCountryCode()
     if !exists("g:spotify_country_code")
         return 'ANY'
@@ -62,40 +75,7 @@ function! WindowsUriOpener(uri, ...)
     catch
     endtry
 python3 << EOL
-import vim
-import spotipy
-import os
-import json
-import spotipy.util as util
-
-from spotipy.oauth2 import SpotifyClientCredentials
-
-client_credentials_manager = SpotifyClientCredentials()
-
-#vim.current.buffer.append(str(os.getenv('SPOTIFY_USER_ID')), 0)
-token = util.prompt_for_user_token(
-        username=os.getenv('SPOTIPY_USER_ID'),
-        scope='user-modify-playback-state',
-        redirect_uri='http://google.com')
-
-#print(token)
-s = spotipy.Spotify(auth=token)
-print(vim.eval('a:uri'))
-print(vim.eval('s:the_uri'))
-internal_uri = vim.eval('s:the_uri')
-
-track_details = s.track(internal_uri)
-print(track_details)
-#y = json.loads(str(track_details))
-y = json.dumps(track_details)
-track_json = json.loads(y)
-#vim.current.buffer.append(str(track_details), 0)
-#vim.current.buffer.append(str(track_json), 2)
-#vim.current.buffer.append(y, 4)
-print(track_json['album'])
-
-
-s.start_playback(device_id=os.getenv('SPOTIFY_DEVICE_ID'), context_uri=track_json['album']['uri'], offset=track_json['track_number']-1)
+my_spotify.windows_uri_opener('a:uri')
 EOL
 endfunction
 
@@ -158,20 +138,7 @@ function! SpotifyTrackSearch(track)
     call s:OpenWindow()
     if ! has_key(s:cache.track_search, a:track)
         python3 << EOL
-import vim
-import spotipy
-import spotipy.util as util
-
-from spotipy.oauth2 import SpotifyClientCredentials
-
-client_credentials_manager = SpotifyClientCredentials()
-s = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
-results = s.search(vim.eval("a:track"), type="track")
-results['tracks']['next'] = 'None'
-results['tracks']['previous'] = 'None'
-
-vim.vars['tracks'] = dict(results) #vim.Dictionary(results)
+my_spotify.track_search("a:track")
 EOL
     let s:cache.track_search[a:track] = g:tracks
     endif
@@ -234,17 +201,7 @@ endfunction
 function! ArtistLookup(artist_uri)
     if ! has_key(s:cache.artist, a:artist_uri)
         python3 << EOL
-import spotipy
-import vim
-from spotipy.oauth2 import SpotifyClientCredentials
-
-client_credentials_manager = SpotifyClientCredentials()
-
-s = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-results = s.artist_albums(vim.eval("a:artist_uri"), album_type='album')
-results['previous'] = 'None'
-results['next'] = 'None'
-vim.vars['tracks'] = dict(results) #vim.Dictionary(results)
+my_spotify.artist_lookup('a:artist_uri')
 EOL
         let s:cache.artist[a:artist_uri] = g:tracks
     endif
@@ -288,16 +245,7 @@ function! s:AlbumLookup(album_uri)
     let l:album = {}
     if ! has_key(s:cache.album, a:album_uri)
         python3 << EOL
-import spotipy
-import vim
-from spotipy.oauth2 import SpotifyClientCredentials
-
-client_credentials_manager = SpotifyClientCredentials()
-s = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-results = s.album(vim.eval("a:album_uri"))
-results['tracks']['next'] = 'None'
-results['tracks']['previous'] = 'None'
-vim.vars['tracks'] = dict(results) #vim.Dictionary(results)
+my_spotify.album_lookup('a:album_uri')
 EOL
         let s:cache.album[a:album_uri] = g:tracks
     endif
