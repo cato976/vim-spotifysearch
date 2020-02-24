@@ -7,14 +7,17 @@ import spotipy.util as util
 from spotipy.oauth2 import SpotifyClientCredentials
 
 client_credentials_manager = SpotifyClientCredentials()
+token = ''
 
 
 def windows_uri_opener(uri):
     # vim.current.buffer.append(str(os.getenv('SPOTIFY_USER_ID')), 0)
-    token = util.prompt_for_user_token(
-            username=os.getenv('SPOTIPY_USER_ID'),
-            scope='user-modify-playback-state',
-            redirect_uri='http://google.com')
+    global token
+    if(token == ''):
+        token = util.prompt_for_user_token(
+                username=os.getenv('SPOTIPY_USER_ID'),
+                scope='user-modify-playback-state',
+                redirect_uri='http://google.com')
 
     # print(token)
     s = spotipy.Spotify(auth=token)
